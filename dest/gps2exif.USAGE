@@ -1,0 +1,76 @@
+
+■アプリ名
+gps2exif
+
+■version
+1.2
+
+■作者
+yasaito
+
+■アプリ概要
+このアプリは、指定されたGPS情報を指定された画像のEXIF情報に埋め込むツールです。
+GPS情報とは、gps/kmz/kmlいずれかの形式のGPSログファイルのことです。
+
+■特徴
+・複数の画像と複数のGPS情報を同時に指定することができます。
+・オプションを使用することで、カメラの時刻ずれがある場合でも対応可能です。
+・GPS情報が時差を持つ場合でも対応できます。
+
+■動作環境
+Javaの1.7以降がインストールされていて、pathが通っていること。
+
+■前提条件
+・GPSタグバージョン 2.3.2対応
+・GPS形式 KMZ、KML。GPXに対応
+・対象の画像形式 JPG JPEG
+
+■注意事項
+・複数のGPS情報を同時に指定した場合、同じ時刻帯の情報を重複して指定しないでください。どちらの情報が設定されるかはランダムです。
+・カメラの時刻がずれていて、画像に記録された撮影時刻とGPS情報の時刻情報がずれていると、画像に記録される位置情報がずれます。
+・本ツールでGPS情報を追加した後、EXIF情報を表示するアプリケーションにうよっては、
+　撮影したカメラや撮影の設定情報(絞りや焦点距離など)の一部が表示できない場合があります。
+・海外で取得したGPS情報や撮影した写真の場合、時刻情報に注意してください。
+
+■使いかた
+・以下のように、コマンドラインから実行します。
+・windowsの場合は、同梱の「gps2exif.bat」の内容を書き換えた後で、「gps2exif.bat」をダブルクリックすることでも実行可能です。
+
+java -jar gps2exif.jar -j "D:/jpg/旅行" -g "D:/gps" -o "./output" 
+
+※javaのjreまでのパスを通しておいてください
+
+
+■仕様
+・「-j」,「-g」は必須オプションです。
+・「-o」が省略された場合は、カレントディレクトリに「output」ディレクトリが作成され、その中にファイルが作成されます。
+・「-i0」「-i1」「-i2」のうち、デフォルトでは「-i0」が指定されたとみなされます。
+・GPSログはUT（グリニッジ標準時）で記録されており、写真の撮影日時はJST（日本標準時）で記録されているとみなします。
+　すなわち、暗黙的に「-AG」のデフォルト値として、"9"が指定されています。
+
+■実行時オプション
+以下に、実行時のオプションの一覧を表示します。
+
+usage:
+gps2exif [-AG <adjustGpsTime>] [-AJ <adjustPhotoTime>] -g <gps file or dir> [-h] -j <jpg file or dir> [-k] [-l] [-m] [-o <outputDir>] [-p] [-s]
+ -AG,--adjust-gps-time <adjustGpsTime>       a time adjustment of gps data: hour
+ -AJ,--adjust-photo-time <adjustPhotoTime>   a time adjustment of jpg files: minute
+ -g,--gps-file <gps file or dir>             target gps data file(s) which KML format, or stored directory with them.
+ -h,--help                                   show usages.
+ -i0                                         the detamination method of the position: the first point after photography time
+ -i1,--nearby                                the detamination method of the position: the nearist point of photography time
+ -i2,--interporation                         the detamination method of the position: interporation by using two points
+ -j,--jpg-file <jpg file or dir>             target jpg/jpeg file(s), or stored directory with them.
+ -k,--gps_prop                               show gps(kml/kmz/gpx) file properties..
+ -l,--log                                    show kml(kmz) raw data.
+ -m,--makedir                                create output directory if there is not.
+ -no,--noupdate                              only analyzing gps log.
+ -o,--output <outputDir>                     output direcotry of photo file(s).
+ -p,--progress                               show progress of processing.
+ -s,--summery                                show summery of result.
+
+■更新履歴
+ver 1.0 初版
+ver 1.1 gpsログ形式をgpxに対応
+ver 1.2 gps位置情報の決定方法を追加（オプションi0, i1,i2の追加）
+        出力先フォルダの指定オプションを、指定必須から指定任意へ変更
